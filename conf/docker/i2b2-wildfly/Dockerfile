@@ -1,5 +1,5 @@
 FROM jboss/wildfly:10.0.0.Final
-MAINTAINER <Kavishwar (Kavi)  Wagholikar waghsk@gmail.com>
+LABEL <Kavishwar (Kavi)  Wagholikar waghsk@gmail.com>
 
 
 ADD jbh/standalone/deploy.tar.bz2  /opt/jboss/wildfly/standalone/
@@ -8,9 +8,7 @@ ADD jbh/standalone/config.tar.bz2  /opt/jboss/wildfly/standalone/
 COPY wfconfig /opt/jboss/wildfly/standalone/configuration/
 COPY dsconfig /configtemp/dsconfig/
 
-COPY prescript.sh /opt/jboss/wildfly/bin/
 #RUN chmod +x /opt/jboss/wildfly/bin/prescript.sh
-
 
 RUN /opt/jboss/wildfly/bin/add-user.sh admin demoadmin --silent
 
@@ -18,10 +16,15 @@ RUN /opt/jboss/wildfly/bin/add-user.sh admin demoadmin --silent
 ENV JBOSS_HOME /opt/jboss/wildfly
 
 
-ENV DS_IP ${DS_IP:-i2b2-pg}
-ENV DS_PORT ${DS_PORT:-5432}
-ENV DS_TYPE ${DS_TYPE:-pg}
-ENV DS_PASS ${DS_TYPE:-demouser}
+# ENV DS_IP ${DS_IP:-i2b2-pg}
+# ENV DS_PORT ${DS_PORT:-5432}
+# ENV DS_TYPE ${DS_TYPE:-pg}
+# ENV DS_PASS ${DS_PASS:-demouser}
+
+ENV DS_IP ${DS_IP:-i2b2-mssql}
+ENV DS_PORT ${DS_PORT:-1433}
+ENV DS_TYPE ${DS_TYPE:-mssql}
+ENV DS_PASS ${DS_PASS:-demouser1!}
 
 ENV DS_CRC_IP ${DS_CRC_IP:-$DS_IP}
 ENV DS_CRC_PORT ${DS_CRC_PORT:-$DS_PORT}
@@ -50,6 +53,8 @@ ENV DS_IM_PASS ${DS_CRC_PASS:-$DS_PASS}
 
 # Expose the ports we're interested in
 EXPOSE 9090 
+
+COPY prescript.sh /opt/jboss/wildfly/bin/
 
 # Set the default command to run on boot
 # This will boot WildFly in the standalone mode and bind to all interface

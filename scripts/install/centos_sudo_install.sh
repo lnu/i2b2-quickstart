@@ -79,15 +79,14 @@ copy_webclient_dir(){
 	fi
 
 	UNZIP_DIR=$BASE/unzipped_packages
-		mkdir $TAR/admin
-		mkdir $TAR/webclient/
-		cp -rv $UNZIP_DIR/i2b2-webclient-master/* $TAR/admin/
-		cp -rv $UNZIP_DIR/i2b2-webclient-master/* $TAR/webclient/
-		cp $BASE/conf/webclient/i2b2_config_data.js $TAR/webclient/
-		cp $BASE/conf/admin/i2b2_config_data.js $TAR/admin/
-		sed -i -- "s/127.0.0.1/$IP/" $TAR/webclient/i2b2_config_data.js
-		sed -i -- "s/127.0.0.1/$IP/" $TAR/admin/i2b2_config_data.js
-
+	mkdir $TAR/admin
+	mkdir $TAR/webclient/
+	cp -rv $UNZIP_DIR/i2b2-webclient-master/* $TAR/admin/
+	cp -rv $UNZIP_DIR/i2b2-webclient-master/* $TAR/webclient/
+	cp $BASE/conf/webclient/i2b2_config_data.js $TAR/webclient/
+	cp $BASE/conf/admin/i2b2_config_data.js $TAR/admin/
+	sed -i -- "s/127.0.0.1/$IP/" $TAR/webclient/i2b2_config_data.js
+	sed -i -- "s/127.0.0.1/$IP/" $TAR/admin/i2b2_config_data.js
 }
 #install_httpd
 #install_webclient

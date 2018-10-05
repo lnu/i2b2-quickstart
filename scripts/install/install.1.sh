@@ -48,15 +48,10 @@ check_homes_for_install(){
 download_i2b2_source(){
 	BASE=$1
 	cd $BASE/packages;
-	for x in i2b2-webclient i2b2-core-server; do
+	for x in i2b2-webclient i2b2-core-server i2b2-data; do
 	#for x in i2b2-webclient i2b2-data; do
-	echo "downloading $x"
-	[ -f  $x.zip ] || wget -v https://github.com/lnu/$x/archive/master.zip -O $x.zip
-	done
-	for x in i2b2-data; do
-	#for x in i2b2-webclient i2b2-data; do
-	echo "downloading $x"
-	[ -f  $x.zip ] || wget -v https://github.com/lnu/$x/archive/sqlserver.zip -O $x.zip
+	 echo " downloading $x"
+	[ -f  $x.zip ] || wget -v https://github.com/i2b2/$x/archive/master.zip -O $x.zip
 	done
 	cd $BASE
 }
@@ -266,6 +261,7 @@ copy_axis2_to_wildfly_i2b2war;
 	echo "edu.harvard.i2b2.ontology.applicationdir=$SPRING_CONF_HOME/standalone/configuration/ontologyapp" >> "$TAR_DIR/etc/spring/ontology_application_directory.properties"
 	ant -f master_build.xml deploy
 
+
 	#default /etc/spring/crc.properties is used
 	#crc_application_directory.properties is appended : edu.harvard.i2b2.crc.applicationdir=/YOUR_JBOSS_HOME_DIR/standalone/configuration/crcapp
 	#JBOSS home is appended to build.properties
@@ -296,35 +292,16 @@ copy_axis2_to_wildfly_i2b2war;
 	echo "edu.harvard.i2b2.workplace.applicationdir=$SPRING_CONF_HOME/standalone/configuration/workplaceapp" >> "$TAR_DIR/etc/spring/workplace_application_directory.properties"
 	ant -f master_build.xml deploy
 
-	#default /etc/spring/im.properties is used
-	#im_application_directory.properties is appended : edu.harvard.i2b2.workplace.applicationdir=/YOUR_JBOSS_HOME_DIR/standalone/configuration/imapp
-	#JBOSS home is appended to build.properties
-	#data source config files is copied
+
 	export CELL_NAME="im"
 	export TAR_DIR="$BASE_CORE/edu.harvard.i2b2.${CELL_NAME}"
 	cd $TAR_DIR
 	echo "jboss.home=$JBOSS_HOME" >> "$TAR_DIR/build.properties"
 	cp -rv "$CONF_DIR/$CELL_NAME"/etc-jboss/$DB/* etc/jboss/
 	
-	echo "edu.harvard.i2b2.im.applicationdir=$SCP/standalone/configuration/imapp" >> "$TAR_DIR/etc/spring/im_application_directory.properties"
+	echo "edu.harvard.i2b2.$CELL_NAME.applicationdir=$SCP/standalone/configuration/im" >> "$TAR_DIR/etc/spring/im_application_directory.properties"
 	ant -f master_build.xml clean build-all
-	echo "edu.harvard.i2b2.im.applicationdir=$SPRING_CONF_HOME/standalone/configuration/imapp" >> "$TAR_DIR/etc/spring/im_application_directory.properties"
-	ant -f master_build.xml deploy
-
-	
-	#default /etc/spring/fr.properties is used
-	#fr_application_directory.properties is appended : edu.harvard.i2b2.fr.applicationdir=/YOUR_JBOSS_HOME_DIR/standalone/configuration/frapp
-	#JBOSS home is appended to build.properties
-	#data source config files is copied
-	export CELL_NAME="fr"
-	export TAR_DIR="$BASE_CORE/edu.harvard.i2b2.${CELL_NAME}"
-	cd $TAR_DIR
-	echo "jboss.home=$JBOSS_HOME" >> "$TAR_DIR/build.properties"
-	cp -rv "$CONF_DIR/$CELL_NAME"/etc-jboss/$DB/* etc/jboss/
-	
-	echo "edu.harvard.i2b2.fr.applicationdir=$SCP/standalone/configuration/frapp" >> "$TAR_DIR/etc/spring/fr_application_directory.properties"
-	ant -f master_build.xml clean build-all
-	echo "edu.harvard.i2b2.fr.applicationdir=$SPRING_CONF_HOME/standalone/configuration/frapp" >> "$TAR_DIR/etc/spring/fr_application_directory.properties"
+	echo "edu.harvard.i2b2.workplace.applicationdir=$SPRING_CONF_HOME/standalone/configuration/imapp" >> "$TAR_DIR/etc/spring/im_application_directory.properties"
 	ant -f master_build.xml deploy
 	
 	for x in $(ls $JBOSS_HOME/standalone/deployments/*-ds.xml);

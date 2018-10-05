@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  i2b2-web:
+    image: local/i2b2-web
+    ports:
+      - "8000:80"
+      - "8001:443"
+    command: /run-httpd.sh localhost
+    networks:
+      - i2b2net
+    depends_on:
+      - i2b2-wildfly
+  i2b2-wildfly:
+    image: local/i2b2-wildfly
+    ports:
+      - "8080:8080"
+      - "9990:9990"
+    networks:
+      - i2b2net
+    depends_on:
+      - i2b2-mssql
+  i2b2-mssql:
+    image: local/i2b2-mssql
+    ports:
+      - "5433:1433"
+    networks:
+      - i2b2net
+    
+networks: 
+    i2b2net:
+       driver: bridge
